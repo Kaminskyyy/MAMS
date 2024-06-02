@@ -5,6 +5,8 @@ import {
   DATABASE_CONFIG_NAME,
   DatabaseConfig,
 } from 'src/config/database.config';
+import { Item } from './entities/item.entity';
+import { Category } from './entities/category.entity';
 
 @Module({
   imports: [
@@ -15,7 +17,7 @@ import {
 
         return {
           type: 'postgres',
-          entities: [],
+          entities: [Item, Category],
           ...options,
         };
       },

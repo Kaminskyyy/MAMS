@@ -7,8 +7,8 @@ services:
       dockerfile: Dockerfile
     container_name: users
     restart: always
-    ports:
-      - 3000:3000
+    # ports:
+    #   - 3000:3000
     depends_on:
       database:
         condition: service_healthy
@@ -19,10 +19,12 @@ services:
       dockerfile: Dockerfile
     container_name: seller
     restart: always
-    ports:
-      - 3001:3000
+    # ports:
+    #   - 3001:3000
     depends_on:
       database:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
 
   nginx:
@@ -56,23 +58,23 @@ services:
       start_period: 10s
       retries: 5
 
-  # rabbitmq:
-  #   image: rabbitmq:3-management
-  #   container_name: auction-rabbitmq
-  #   hostname: rabbitmq
-  #   restart: always
-  #   environment:
-  #     - RABBITMQ_DEFAULT_USER=admin
-  #     - RABBITMQ_DEFAULT_PASS=admin
-  #     - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit disk_free_limit 2147483648
-  #   volumes:
-  #     - ./rabbitmq-data:/var/lib/rabbitmq
-  #   ports:
-  #     - 15672:15672
-  #     - 5672:5672
-  #   healthcheck:
-  #     test: ['CMD-SHELL', 'rabbitmqctl status']
-  #     interval: 5s
-  #     timeout: 20s
-  #     start_period: 10s
-  #     retries: 5
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit disk_free_limit 2147483648
+    volumes:
+      - ./rabbitmq-data:/var/lib/rabbitmq
+    ports:
+      - 15672:15672
+      - 5672:5672
+    healthcheck:
+      test: ['CMD-SHELL', 'rabbitmqctl status']
+      interval: 5s
+      timeout: 20s
+      start_period: 10s
+      retries: 5
