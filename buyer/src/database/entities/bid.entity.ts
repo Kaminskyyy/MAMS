@@ -1,10 +1,5 @@
+import { Currency } from 'src/common/types/currency.enum';
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
-export enum Currency {
-  USD = 'USD',
-  EUR = 'EUR',
-  UAH = 'UAH',
-}
 
 @Entity()
 export class Bid extends BaseEntity {

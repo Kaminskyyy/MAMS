@@ -1,0 +1,2 @@
+export const SELLER_SERVICE = 'SELLER_SERVICE';
+export const AUCTION_SERVICE = 'AUCTION_SERVICE';

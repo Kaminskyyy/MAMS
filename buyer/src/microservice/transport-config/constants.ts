@@ -1,1 +1,0 @@
-export const SELLER_SERVICE = 'SELLER_SERVICE';

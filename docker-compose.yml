@@ -7,24 +7,46 @@ services:
       dockerfile: Dockerfile
     container_name: users
     restart: always
-    # ports:
-    #   - 3000:3000
     depends_on:
       database:
         condition: service_healthy
 
-  seller:
+  items:
     build:
       context: ./seller
       dockerfile: Dockerfile
-    container_name: seller
+    container_name: items
     restart: always
-    # ports:
-    #   - 3001:3000
     depends_on:
       database:
         condition: service_healthy
       rabbitmq:
+        condition: service_healthy
+
+  bids:
+    build:
+      context: ./buyer
+      dockerfile: Dockerfile
+    container_name: bids
+    restart: always
+    depends_on:
+      database:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  auctions:
+    build:
+      context: ./auction
+      dockerfile: Dockerfile
+    container_name: auctions
+    restart: always
+    depends_on:
+      database:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
         condition: service_healthy
 
   nginx:
@@ -36,7 +58,7 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - seller
+      - items
       - users
 
   database:
@@ -74,6 +96,27 @@ services:
       - 5672:5672
     healthcheck:
       test: ['CMD-SHELL', 'rabbitmqctl status']
+      interval: 5s
+      timeout: 20s
+      start_period: 10s
+      retries: 5
+
+  redis:
+    image: redis/redis-stack
+    container_name: redis
+    restart: always
+    ports:
+      - 6379:6379
+      - 8001:8001
+    volumes:
+      - ./redis-data/dаta:/root/redis
+      - ./redis-data/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_PASSWORD=admin
+      - REDIS_PORT=6379
+      - REDIS_DATABASES=16
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 5s
       timeout: 20s
       start_period: 10s

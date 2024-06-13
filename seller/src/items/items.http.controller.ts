@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ItemDto } from './dto/item.dto';
 import { ItemsService } from './items.service';
 import { Item } from 'src/database/entities/item.entity';
 import { RequestHeader } from 'src/common/decorators/request-header.decorator';
 import { XUserHeaders } from 'src/common/dto/x-user-headers.dto';
+import { ItemScheduleAuctionDto } from './dto/item-schedule-auction.dto';
+import { ItemWithAuctionResults } from './interfaces/item-with-auction-results.interface';
 
 @Controller('items')
 export class ItemsController {
@@ -20,16 +22,29 @@ export class ItemsController {
   @Get('/my')
   async findUserItems(
     @RequestHeader(XUserHeaders) xUserHeaders: XUserHeaders,
-  ): Promise<Item[]> {
+  ): Promise<(Item | ItemWithAuctionResults)[]> {
     return this.itemsService.findBySellerId(xUserHeaders['X-User-Id']);
   }
 
   @Get()
-  async find(@Query('category_id') categoryId: number) {
+  async find(@Query('category_id') categoryId: number): Promise<Item[]> {
     if (categoryId) {
       return this.itemsService.findByCategoryId(categoryId);
     }
 
     return this.itemsService.findAll();
+  }
+
+  @Post('/:id/schedule')
+  async scheduleAuction(
+    @RequestHeader(XUserHeaders) xUserHeaders: XUserHeaders,
+    @Param('id') itemId: number,
+    @Body() body: ItemScheduleAuctionDto,
+  ): Promise<void> {
+    return this.itemsService.scheduleAuction(
+      xUserHeaders['X-User-Id'],
+      itemId,
+      body,
+    );
   }
 }

@@ -3,9 +3,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
-import { AuthModule } from './auth/auth.module';
 import { ItemsModule } from './items/items.module';
 import { CategoriesModule } from './categories/categories.module';
+import { AuctionsModule } from './auctions/auctions.module';
 import databaseConfig from './config/database.config';
 import rabbitmqConfig from './config/rabbitmq.config';
 
@@ -17,9 +17,9 @@ import rabbitmqConfig from './config/rabbitmq.config';
       load: [databaseConfig, rabbitmqConfig],
     }),
     DatabaseModule,
-    AuthModule,
     ItemsModule,
     CategoriesModule,
+    AuctionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

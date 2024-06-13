@@ -4,9 +4,10 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import rabbitmqConfig from './config/rabbitmq.config';
 import { DatabaseModule } from './database/database.module';
-import { ItemsModule } from './microservice/items/items.module';
 import databaseConfig from './config/database.config';
-import { BidsModule } from './http/bids/bids.module';
+import { BidsModule } from './bids/bids.module';
+import { ItemsModule } from './items/items.module';
+import { AuctionModule } from './auction/auction.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { BidsModule } from './http/bids/bids.module';
     DatabaseModule,
     BidsModule,
     ItemsModule,
+    AuctionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

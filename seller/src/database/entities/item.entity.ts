@@ -12,6 +12,7 @@ export enum ItemStatus {
   AUCTION_SCHEDULED = 'auction_scheduled',
   AUCTION_STARTED = 'auction_started',
   AUCTION_FINISHED = 'auction_finished',
+  AUCTION_CANCELLED_INSUFFICIENT_BIDS = 'auction_cancelled_insufficient_bids',
 }
 
 export enum Currency {
@@ -50,7 +51,7 @@ export class Item extends BaseEntity {
   })
   auctionCurrency: Currency;
 
-  @Column()
+  @Column({ nullable: true })
   auctionDate: Date;
 
   @Column({

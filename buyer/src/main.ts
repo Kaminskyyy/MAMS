@@ -11,6 +11,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
+      transform: true,
     }),
   );
 
@@ -32,6 +33,7 @@ async function bootstrap() {
     { inheritAppConfig: true },
   );
 
+  await app.startAllMicroservices();
   await app.listen(+configService.get('APP_PORT'));
 }
 bootstrap();
